@@ -1,6 +1,7 @@
 package com.abc.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,36 +15,35 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.abc.entity.Sanpham;
-import com.abc.repository.SanphamRepository;
+import com.abc.entity.Danhmuc;
+import com.abc.repository.DanhmucRepository;
 
 @RestController
-public class SanphamController {
-	
+public class DanhmucController {
 	@Autowired
-	SanphamRepository repo;
+	DanhmucRepository repo;
 	
-	@GetMapping("/sanpham")
-	public ResponseEntity<List<Sanpham>> all() {
+	@GetMapping("/danhmuc")
+	public ResponseEntity<List<Danhmuc>> all() {
 		return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
 	}
 
-	@PostMapping("/sanpham")
-	public String postSanpham(@Validated @RequestBody Sanpham sp) {
-		List<Sanpham> sanpham = repo.findAll();
-		for (Sanpham s : sanpham) {
-			if (s.getMasp().equalsIgnoreCase(sp.getMasp())) {
+	@PostMapping("/danhmuc")
+	public String postDanhmuc(@Validated @RequestBody Danhmuc dm) {
+		List<Danhmuc> danhmuc = repo.findAll();
+		for (Danhmuc d: danhmuc) {
+			if (d.getMadm().equalsIgnoreCase(d.getMadm())) {
 				return "false";
 			}
 		}
-		repo.save(sp);
+		repo.save(dm);
 		return "true";
 	}
 
-	@DeleteMapping("/sanpham/{masp}")
-	public String deleteIdSanpham(@PathVariable String masp) {
+	@DeleteMapping("/danhmuc/{madm}")
+	public String deleteIdKhachhang(@PathVariable String madm) {
 		try {
-			repo.deleteById(masp);
+			repo.deleteById(madm);
 		} catch (Exception e) {
 			e.getMessage();
 			return "false";
@@ -51,24 +51,19 @@ public class SanphamController {
 		return "true";
 	}
 
-	@PutMapping("/sanpham")
-	public String putSanpham(@Validated @RequestBody Sanpham sp) {
+	@PutMapping("/danhmuc")
+	public String putDanhmuc(@Validated @RequestBody Danhmuc dm) {
 		try {
-			repo.save(sp);
+			repo.save(dm);
 		} catch (Exception ex) {
 			ex.getMessage();
 			return "false";
 		}
 		return "true";
 	}
-	
-	@GetMapping("/sanpham/{tensp}")
-	public List<Sanpham> getTenSanpham(@PathVariable("tensp") String tensp){
-		return repo.getSanphamByTensp(tensp);
-	}
-	
-	@GetMapping("sanpham/{madm}")
-	public List<Sanpham> getSanphamByMadm(@PathVariable("madm") String madm){
-		return repo.getSanphamByMadm(madm);
+
+	@GetMapping("/danhmuc/{madm}")
+	public Optional<Danhmuc> getIdDanhmuc(@PathVariable String madm) {
+		return repo.findById(madm);
 	}
 }
