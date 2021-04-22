@@ -1,6 +1,7 @@
 package com.abc.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,5 +69,8 @@ public class SanphamController {
 		}
 		return new ResponseEntity<String>("failed !!!" , HttpStatus.BAD_REQUEST);
 	}
-	
+	@GetMapping("/sanpham/{masp}")
+	public Optional<Sanpham> getSPByID(@PathVariable("masp") String masp) {
+		return repo.findById(masp);
+	}
 }

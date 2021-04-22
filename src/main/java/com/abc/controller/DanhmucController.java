@@ -1,6 +1,7 @@
 package com.abc.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -68,6 +69,10 @@ public class DanhmucController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
+	}
+	@GetMapping("/danhmuc/{madm}")
+	public Optional<Danhmuc> getDMByID(@PathVariable("madm") String madm) {
+		return repo.findById(madm);
 	}
 	
 }
