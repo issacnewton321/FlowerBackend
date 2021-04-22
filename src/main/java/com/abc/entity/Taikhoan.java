@@ -3,6 +3,8 @@ package com.abc.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,6 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 public class Taikhoan {
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	int matk;
 	String username;
 	String password;

@@ -18,6 +18,17 @@ public class Quyen {
 	@OneToMany(mappedBy = "quyen")
 	List<Taikhoan> listTK;
 
+	
+	
+	public Quyen() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Quyen(int maquyen) {
+		this.maquyen = maquyen;
+	}
+
 	public int getMaquyen() {
 		return maquyen;
 	}

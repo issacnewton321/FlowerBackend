@@ -1,19 +1,12 @@
 package com.abc.controller;
 
 import java.util.List;
-<<<<<<< HEAD
 import java.util.Optional;
-=======
->>>>>>> 854b748513beec41c1cef300627fa7932c4deab2
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-<<<<<<< HEAD
-=======
 import org.springframework.web.bind.annotation.CrossOrigin;
->>>>>>> 854b748513beec41c1cef300627fa7932c4deab2
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,61 +19,17 @@ import com.abc.entity.Danhmuc;
 import com.abc.repository.DanhmucRepository;
 
 @RestController
-<<<<<<< HEAD
-public class DanhmucController {
-=======
 @CrossOrigin
 public class DanhmucController {
 
->>>>>>> 854b748513beec41c1cef300627fa7932c4deab2
 	@Autowired
 	DanhmucRepository repo;
 	
 	@GetMapping("/danhmuc")
-<<<<<<< HEAD
 	public ResponseEntity<List<Danhmuc>> all() {
 		return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
 	}
-
-	@PostMapping("/danhmuc")
-	public String postDanhmuc(@Validated @RequestBody Danhmuc dm) {
-		List<Danhmuc> danhmuc = repo.findAll();
-		for (Danhmuc d: danhmuc) {
-			if (d.getMadm().equalsIgnoreCase(d.getMadm())) {
-				return "false";
-			}
-		}
-		repo.save(dm);
-		return "true";
-	}
-
-	@DeleteMapping("/danhmuc/{madm}")
-	public String deleteIdKhachhang(@PathVariable String madm) {
-		try {
-			repo.deleteById(madm);
-		} catch (Exception e) {
-			e.getMessage();
-			return "false";
-		}
-		return "true";
-	}
-
-	@PutMapping("/danhmuc")
-	public String putDanhmuc(@Validated @RequestBody Danhmuc dm) {
-		try {
-			repo.save(dm);
-		} catch (Exception ex) {
-			ex.getMessage();
-			return "false";
-		}
-		return "true";
-	}
-
-	@GetMapping("/danhmuc/{madm}")
-	public Optional<Danhmuc> getIdDanhmuc(@PathVariable String madm) {
-		return repo.findById(madm);
-	}
-=======
+	
 	public List<Danhmuc> getListDM(){
 		return repo.findAll();
 	}
@@ -124,6 +73,9 @@ public class DanhmucController {
 		}
 		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 	}
+	@GetMapping("/danhmuc/{madm}")
+	public Optional<Danhmuc> getDMByID(@PathVariable("madm") String madm) {
+		return repo.findById(madm);
+	}
 	
->>>>>>> 854b748513beec41c1cef300627fa7932c4deab2
 }
