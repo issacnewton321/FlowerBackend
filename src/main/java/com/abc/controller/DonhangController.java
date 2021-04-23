@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abc.entity.Danhmuc;
 import com.abc.entity.Donhang;
+import com.abc.entity.Sanpham;
 import com.abc.repository.DonhangRepositoty;
 
 @RestController
@@ -24,9 +26,9 @@ public class DonhangController {
 	DonhangRepositoty repo;
 	
 	@GetMapping("/donhang")
-    public ResponseEntity<List<Donhang>> getDonhang() {
-        return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
-    }
+	public List<Donhang> getListDH(){
+		return repo.findAll();
+	}
 	
 	@GetMapping("/donhang/{makh}/{madh}")// ?username làm biến ảo (không trùng với các method get khác) có thể nhập sai trường username :)
 	public Optional<Donhang> getIdDonhangByMakh(@PathVariable("madh") String madh) {
@@ -48,39 +50,46 @@ public class DonhangController {
 		return repo.getDonhangByManv(manv);
 	}
 	
-	@PostMapping("/donhang")
-	public String postDonhang(@Validated @RequestBody Donhang dh) {
-		
-		List<Donhang> listDh = repo.findAll();
-		for (Donhang dh1 : listDh) {
-			if (dh1.getMadh().equalsIgnoreCase(dh.getMadh())) {
-				return "false";
+	@PutMapping("/donhang")
+	public ResponseEntity<String> updateDonhang(@Validated @RequestBody Donhang donhang) {
+
+		try {
+			List<Donhang> listDH = repo.findAll();
+			for(Donhang dh : listDH) {
+				if (dh.getMadh().equalsIgnoreCase(donhang.getMadh())) {
+					repo.save(donhang);
+					return new ResponseEntity<String>("Successed !!!",HttpStatus.OK);
+				}
 			}
+			return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-		repo.save(dh);
-		return "true";
+		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 	}
 	
-	@PutMapping("/donhang")
-	public String putDonhang(@Validated @RequestBody Donhang dh) {
+	@PostMapping("/donhang")
+	public ResponseEntity<String> insertDonhang(@Validated @RequestBody Donhang dh) {
 		try {
 			repo.save(dh);
-		} catch (Exception ex) {
-			ex.getMessage();
-			return "false";
+			return new ResponseEntity<String>("Successed !!!",HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return "true";
+		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("/donhang/{madh}")
-	public String deleteIdDonhang(@PathVariable("madh") String madh) {
+	public ResponseEntity<String> deleteIdDonhang(@PathVariable("madh") String madh) {
 		try {
 			repo.deleteById(madh);
+			return new ResponseEntity<String>("Successed !!!",HttpStatus.OK);
 		} catch (Exception e) {
-			e.getMessage();
-			return "false";
 			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return "true";
+		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 	}
 }

@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.abc.entity.Danhmuc;
 import com.abc.entity.Nhanvien;
+import com.abc.entity.Sanpham;
 import com.abc.repository.NhanvienRepository;
 
 @RestController
@@ -24,48 +26,55 @@ public class NhanvienController {
 	NhanvienRepository repo;
 	
 	@GetMapping("/nhanvien")
-    public ResponseEntity<List<Nhanvien>> getNhanvien() {
-        return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
-    }
+	public List<Nhanvien> getListNV(){
+		return repo.findAll();
+	}
 	
 	@GetMapping("/nhanvien/{mand}")
 	public Optional<Nhanvien> getIdNhanvien(@PathVariable("mand") String mand) {
 		return repo.findById(mand);
 	}
 	
-	@PostMapping("/nhanvien")
-	public String postNhanvien(@Validated @RequestBody Nhanvien nv) {
-		
-		List<Nhanvien> listNv = repo.findAll();
-		for (Nhanvien nv1 : listNv) {
-			if (nv1.getManv().equalsIgnoreCase(nv.getManv())) {
-				return "false";
+	@PutMapping("/nhanvien")
+	public ResponseEntity<String> updateNhanvien(@Validated @RequestBody Nhanvien nhanvien) {
+
+		try {
+			List<Nhanvien> listNV = repo.findAll();
+			for(Nhanvien nv : listNV) {
+				if(nv.getManv().equalsIgnoreCase(nhanvien.getManv())) {
+					repo.save(nhanvien);
+					return new ResponseEntity<String>("Successed !!!",HttpStatus.OK);
+				}
 			}
+			return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-		repo.save(nv);
-		return "true";
+		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 	}
 	
-	@PutMapping("/nhanvien")
-	public String putNhanvien(@Validated @RequestBody Nhanvien nv) {
+	@PostMapping("/nhanvien")
+	public ResponseEntity<String> insertNhanvien(@Validated @RequestBody Nhanvien nv) {
 		try {
 			repo.save(nv);
-		} catch (Exception ex) {
-			ex.getMessage();
-			return "false";
+			return new ResponseEntity<String>("Successed !!!",HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return "true";
+		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("/nhanvien/{mand}")
-	public String deleteIdNhanvien(@PathVariable("mand") String mand) {
+	public ResponseEntity<String> deleteIdNhanvien(@PathVariable("mand") String mand) {
 		try {
 			repo.deleteById(mand);
+			return new ResponseEntity<String>("Successed !!!",HttpStatus.OK);
 		} catch (Exception e) {
-			e.getMessage();
-			return "false";
 			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return "true";
+		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 	}
 }

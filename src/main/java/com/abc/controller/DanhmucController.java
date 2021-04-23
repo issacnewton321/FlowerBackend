@@ -26,10 +26,6 @@ public class DanhmucController {
 	DanhmucRepository repo;
 	
 	@GetMapping("/danhmuc")
-	public ResponseEntity<List<Danhmuc>> all() {
-		return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
-	}
-	
 	public List<Danhmuc> getListDM(){
 		return repo.findAll();
 	}
@@ -73,9 +69,4 @@ public class DanhmucController {
 		}
 		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 	}
-	@GetMapping("/danhmuc/{madm}")
-	public Optional<Danhmuc> getDMByID(@PathVariable("madm") String madm) {
-		return repo.findById(madm);
-	}
-	
 }

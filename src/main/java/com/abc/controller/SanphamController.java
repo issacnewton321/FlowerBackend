@@ -27,8 +27,8 @@ public class SanphamController {
 	SanphamRepository repo;
 	
 	@GetMapping("/sanpham")
-	public ResponseEntity<List<Sanpham>> all() {
-		return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
+	public List<Sanpham> getListSP(){
+		return repo.findAll();
 	}
 
 	@PostMapping("/sanpham")
@@ -69,9 +69,5 @@ public class SanphamController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<String>("failed !!!" , HttpStatus.BAD_REQUEST);
-	}
-	@GetMapping("/sanpham/{masp}")
-	public Optional<Sanpham> getSPByID(@PathVariable("masp") String masp) {
-		return repo.findById(masp);
 	}
 }

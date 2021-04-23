@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.abc.entity.Binhluan;
+import com.abc.entity.Sanpham;
 import com.abc.repository.BinhluanRepository;
 
 @RestController
@@ -24,48 +25,50 @@ public class BinhluanController {
 	BinhluanRepository repo;
 	
 	@GetMapping("/binhluan")
-    public ResponseEntity<List<Binhluan>> getBinhluan() {
-        return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
-    }
-	
-	@GetMapping("/binhluan/{id}")
-	public Optional<Binhluan> getIdBinhluan(@PathVariable("id") int id) {
-		return repo.findById(id);
-	}
-	
-	@PostMapping("/binhluan")
-	public String postBinhluan(@Validated @RequestBody Binhluan bl) {
-		
-		List<Binhluan> listBl = repo.findAll();
-		for (Binhluan bl1 : listBl) {
-			if (bl1.getId() == bl.getId()) {
-				return "false";
-			}
-		}
-		repo.save(bl);
-		return "true";
+	public List<Binhluan> getListBL(){
+		return repo.findAll();
 	}
 	
 	@PutMapping("/binhluan")
-	public String putBinhluan(@Validated @RequestBody Binhluan bl) {
+	public ResponseEntity<String> updateBinhluan(@Validated @RequestBody Binhluan binhluan) {
+
+		try {
+			List<Binhluan> listBl = repo.findAll();
+			for(Binhluan bl : listBl) {
+				if(bl.getId() == binhluan.getId()) {
+					repo.save(binhluan);
+					return new ResponseEntity<String>("Successed" , HttpStatus.OK);
+				}
+			}
+			return new ResponseEntity<String>("failed !!!" , HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return new ResponseEntity<String>("failed !!!" , HttpStatus.BAD_REQUEST);
+	}
+	
+	@PostMapping("/binhluan")
+	public ResponseEntity<String> insertBinhluan(@Validated @RequestBody Binhluan bl) {
 		try {
 			repo.save(bl);
-		} catch (Exception ex) {
-			ex.getMessage();
-			return "false";
+			return new ResponseEntity<String>("successed !!!" , HttpStatus.OK);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return "true";
+		return new ResponseEntity<String>("failed !!!" , HttpStatus.BAD_REQUEST);
 	}
 	
 	@DeleteMapping("/binhluan/{id}")
-	public String deleteIdBinhluan(@PathVariable("id") int id) {
+	public ResponseEntity<String> deleteIdBinhluan(@PathVariable("id") int id) {
 		try {
 			repo.deleteById(id);
+			return new ResponseEntity<String>("successed !!!" , HttpStatus.OK);
 		} catch (Exception e) {
-			e.getMessage();
-			return "false";
 			// TODO: handle exception
+			e.printStackTrace();
 		}
-		return "true";
+		return new ResponseEntity<String>("failed !!!" , HttpStatus.BAD_REQUEST);
 	}
 }
