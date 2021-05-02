@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,7 @@ import com.abc.repository.KhachhangRepository;
 import com.abc.repository.TaikhoanRepository;
 
 @RestController
+@CrossOrigin
 public class DangkyController {
 
 	@Autowired 
@@ -24,6 +27,14 @@ public class DangkyController {
 	
 	@Autowired
 	TaikhoanRepository taiKhoanRepo;
+	
+	@GetMapping("/IsUserExits/{username}")
+	public ResponseEntity<Boolean> checkUserExit(@PathVariable("username") String username){
+		if(taiKhoanRepo.findByUsername(username) != null)
+			return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+		else
+			return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
+	}
 	
 	@PostMapping("/register")
 	public ResponseEntity<String> register(@Validated @RequestBody Dangky dangky){
@@ -60,5 +71,12 @@ public class DangkyController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<String>("failed !!!",HttpStatus.BAD_REQUEST);
+	}
+	
+	
+	@GetMapping("/quyen/{username}")
+	public int getQuyen(@PathVariable("username") String username) {
+		Taikhoan tk = taiKhoanRepo.findByUsername(username);
+		return tk.getQuyen().getMaquyen();
 	}
 }

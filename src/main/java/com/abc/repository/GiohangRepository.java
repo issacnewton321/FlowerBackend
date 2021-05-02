@@ -2,7 +2,10 @@ package com.abc.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import com.abc.entity.Giohang;
@@ -13,9 +16,13 @@ public interface GiohangRepository extends JpaRepository<Giohang, Giohang_ID>{
 	@Query(nativeQuery = true, value = "select * from Giohang where makh = ?1")
 	List<Giohang> getGiohangByMakh(String makh);
 	
+	@Transactional
+	@Modifying
 	@Query(nativeQuery = true, value = "delete from Giohang where makh = ?1")
-	List<Giohang> deleteGiohangByMakh(String username);
+	void deleteGiohangByMakh(String username);
 	
+	@Transactional
+	@Modifying
 	@Query(nativeQuery = true, value = "delete from Giohang where makh = ?1 and masp = ?2")
-	List<Giohang> deleteGiohangByMakhAndMasp(String makh, String masp);
+	void deleteGiohangByMakhAndMasp(String makh, String masp);
 }

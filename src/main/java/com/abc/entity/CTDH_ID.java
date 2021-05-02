@@ -8,6 +8,19 @@ import javax.persistence.Embeddable;
 public class CTDH_ID implements Serializable {
 	String madh;
 	String masp;
+	
+	
+	public CTDH_ID() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	public CTDH_ID(String madh, String masp) {
+		super();
+		this.madh = madh;
+		this.masp = masp;
+	}
+
 	public String getMadh() {
 		return madh;
 	}

@@ -9,6 +9,17 @@ public class Giohang_ID implements Serializable{
 	String makh;
 	String masp;
 	
+	
+	
+	public Giohang_ID() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Giohang_ID(String makh, String masp) {
+		super();
+		this.makh = makh;
+		this.masp = masp;
+	}
 	public String getMakh() {
 		return makh;
 	}
