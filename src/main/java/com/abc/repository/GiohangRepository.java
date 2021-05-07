@@ -13,16 +13,16 @@ import com.abc.entity.Giohang_ID;
 
 public interface GiohangRepository extends JpaRepository<Giohang, Giohang_ID>{
 	
-	@Query(nativeQuery = true, value = "select * from Giohang where makh = ?1")
+	@Query(nativeQuery = true, value = "select * from giohang where makh = ?1")
 	List<Giohang> getGiohangByMakh(String makh);
 	
 	@Transactional
 	@Modifying
-	@Query(nativeQuery = true, value = "delete from Giohang where makh = ?1")
+	@Query(nativeQuery = true, value = "delete from giohang where makh = ?1")
 	void deleteGiohangByMakh(String username);
 	
 	@Transactional
 	@Modifying
-	@Query(nativeQuery = true, value = "delete from Giohang where makh = ?1 and masp = ?2")
+	@Query(nativeQuery = true, value = "delete from giohang where makh = ?1 and masp = ?2")
 	void deleteGiohangByMakhAndMasp(String makh, String masp);
 }
