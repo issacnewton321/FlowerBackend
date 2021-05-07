@@ -20,7 +20,7 @@ public class Donhang {
 	int trangthai;
 	int hinhthucthanhtoan;
 	
-	@JsonIgnore
+	
 	@OneToMany(mappedBy = "donhang")
 	List<CTDH> listCTDH;
 	

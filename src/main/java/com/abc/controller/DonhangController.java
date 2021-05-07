@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,7 @@ import com.abc.repository.GiohangRepository;
 import com.abc.repository.SanphamRepository;
 
 @RestController
+@CrossOrigin
 public class DonhangController {
 	@Autowired
 	DonhangRepositoty repo;
@@ -60,10 +62,6 @@ public class DonhangController {
 		return repo.getDonhangByMakh(makh);
 	}
 	
-	@GetMapping("/donhang/{makv}")
-	public List<Donhang> getDonhangByManv(@PathVariable("manv") String manv){
-		return repo.getDonhangByManv(manv);
-	}
 	
 	@PutMapping("/donhang")
 	public ResponseEntity<String> updateDonhang(@Validated @RequestBody Donhang donhang) {
@@ -124,12 +122,13 @@ public class DonhangController {
 				return new ResponseEntity<String>("không thể thêm đơn hàng",HttpStatus.BAD_REQUEST);
 			}
 			try {
-				ghRepo.deleteGiohangByMakh(makh);
+				for(Dathang dh : listDH) {
+					ghRepo.deleteGiohangByMakhAndMasp(makh, dh.getMasp());
+				}
 				return new ResponseEntity<String>("Successed !!!",HttpStatus.OK);
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
-				return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -140,7 +139,14 @@ public class DonhangController {
 	
 	@DeleteMapping("/donhang/{madh}")
 	public ResponseEntity<String> deleteIdDonhang(@PathVariable("madh") String madh) {
+		List<CTDH> listCT = ctRepo.findAll();
 		try {
+			
+			for(CTDH ct : listCT) {
+				if(ct.getId().getMadh().equalsIgnoreCase(madh)) {
+					ctRepo.delete(ct);
+				}
+			}
 			repo.deleteById(madh);
 			return new ResponseEntity<String>("Successed !!!",HttpStatus.OK);
 		} catch (Exception e) {
@@ -148,5 +154,22 @@ public class DonhangController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
+	}
+	@PutMapping("/donhang/{madh}")
+	public ResponseEntity<Boolean> huyDonhang(@PathVariable("madh") String madh) {
+		
+		Optional<Donhang> dh = repo.findById(madh);
+		
+		if(dh.get().getTrangthai()==0 || dh.get().getTrangthai() == 1) {
+			try {
+				dh.get().setTrangthai(-1);
+				repo.save(dh.get());
+				return new ResponseEntity<Boolean>(true,HttpStatus.OK);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
+		}
+		
+		return new ResponseEntity<Boolean>(false,HttpStatus.BAD_REQUEST);
 	}
 }

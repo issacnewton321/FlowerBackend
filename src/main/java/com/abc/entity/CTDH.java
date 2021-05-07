@@ -6,12 +6,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class CTDH {
 	@EmbeddedId
 	CTDH_ID id;
 	int soluong;
 	
+	@JsonIgnore
 	@ManyToOne
 	@MapsId("madh")
 	@JoinColumn(name = "madh")

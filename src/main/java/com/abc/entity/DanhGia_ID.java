@@ -11,7 +11,7 @@ public class DanhGia_ID implements Serializable{
 	public String getMand() {
 		return makh;
 	}
-	public void setMand(String makh) {
+	public void setMakh(String makh) {
 		this.makh = makh;
 	}
 	public String getMasp() {

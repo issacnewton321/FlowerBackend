@@ -74,4 +74,8 @@ public class SanphamController {
 	public Optional<Sanpham> getSPByID(@PathVariable("masp") String masp) {
 		return repo.findById(masp);
 	}
+	@GetMapping("/sanpham/danhmuc/{madm}")
+	public List<Sanpham> getListSPByMadm(@PathVariable("madm") String madm){
+		return repo.getSPByMadm(madm);
+	}
 }
