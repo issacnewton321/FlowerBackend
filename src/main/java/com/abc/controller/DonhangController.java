@@ -1,11 +1,17 @@
 package com.abc.controller;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.naming.java.javaURLContextFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -30,6 +36,8 @@ import com.abc.repository.DonhangRepositoty;
 import com.abc.repository.GiohangRepository;
 import com.abc.repository.SanphamRepository;
 
+import io.jsonwebtoken.lang.Collections;
+
 @RestController
 @CrossOrigin
 public class DonhangController {
@@ -44,7 +52,7 @@ public class DonhangController {
 	
 	@GetMapping("/donhang")
 	public List<Donhang> getListDH(){
-		return repo.findAll();
+		return repo.findAll(Sort.by(Sort.Order.desc("ngaydat"),Sort.Order.asc("trangthai")));
 	}
 	
 	@GetMapping("/donhang/{makh}/{madh}")// ?username làm biến ảo (không trùng với các method get khác) có thể nhập sai trường username :)
@@ -59,7 +67,20 @@ public class DonhangController {
 	
 	@GetMapping("/donhang/{makh}")
 	public List<Donhang> getDonhangByMakh(@PathVariable("makh") String makh){
-		return repo.getDonhangByMakh(makh);
+		List<Donhang> list = repo.getDonhangByMakh(makh);
+		java.util.Collections.sort(list,new Comparator<Donhang>() {
+
+			@Override
+			public int compare(Donhang o1, Donhang o2) {
+				int cpTT = o2.getNgaydat().compareTo(o1.getNgaydat());
+				if(cpTT != 0) {
+					return o2.getNgaydat().compareTo(o1.getNgaydat());
+				}
+				return o1.getTrangthai()>o2.getTrangthai()?1:-1;
+			}
+			
+		});
+		return list;
 	}
 	
 	
@@ -86,14 +107,16 @@ public class DonhangController {
 	public ResponseEntity<String> insertDonhang(@Validated @RequestBody List<Dathang> listDH,@PathVariable("makh") String makh) {
 		try {
 			Donhang donhang = new Donhang();
-			String madh = "DH" +  System.currentTimeMillis() % 10000000;
+			String madh = "DH" +  System.currentTimeMillis() % 100000000;
 			float tongtien = 0;
 			for(Dathang dh : listDH) {
 				tongtien += dh.getDongia() * dh.getSoluong();
 			}
 			
 			donhang.setMadh(madh);
-			donhang.setNgaydat(new Date(System.currentTimeMillis()));
+			//Timestamp tm = new Timestamp(System.currentTimeMillis());
+			
+			//donhang.setNgaydat(tm);
 			donhang.setHinhthucthanhtoan(1);
 			donhang.setTrangthai(0);
 			Khachhang khachhang = new Khachhang();
@@ -160,9 +183,9 @@ public class DonhangController {
 		
 		Optional<Donhang> dh = repo.findById(madh);
 		
-		if(dh.get().getTrangthai()==0 || dh.get().getTrangthai() == 1) {
+		if(true) {
 			try {
-				dh.get().setTrangthai(-1);
+				dh.get().setTrangthai(4);
 				repo.save(dh.get());
 				return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 			} catch (Exception e) {

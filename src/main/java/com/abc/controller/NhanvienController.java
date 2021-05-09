@@ -41,9 +41,9 @@ public class NhanvienController {
 		return repo.findAll();
 	}
 	
-	@GetMapping("/nhanvien/{mand}")
-	public Optional<Nhanvien> getIdNhanvien(@PathVariable("mand") String mand) {
-		return repo.findById(mand);
+	@GetMapping("/nhanvien/{username}")
+	public Nhanvien getNhanvien(@PathVariable("username") String username) {
+		return repo.getNhanvienByUsername(username); 
 	}
 	
 	@PutMapping("/nhanvien")

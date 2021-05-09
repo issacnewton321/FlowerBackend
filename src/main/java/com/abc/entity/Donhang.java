@@ -1,6 +1,7 @@
 package com.abc.entity;
 
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -9,6 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,6 +23,8 @@ public class Donhang {
 	@Id
 	String madh;
 	float tongtien;
+	@CreationTimestamp
+	@Temporal(TemporalType.TIMESTAMP)
 	Date ngaydat;
 	int trangthai;
 	int hinhthucthanhtoan;
@@ -49,6 +57,12 @@ public class Donhang {
 		this.tongtien = tongtien;
 	}
 
+	
+
+	
+
+	
+	
 	public Date getNgaydat() {
 		return ngaydat;
 	}

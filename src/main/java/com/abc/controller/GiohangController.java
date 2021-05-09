@@ -36,11 +36,12 @@ public class GiohangController {
 	
 	@GetMapping("/giohang/{makh}/{masp}")
 	public ResponseEntity<Boolean> changeNum(@PathVariable("makh") String makh,@PathVariable("masp") String masp,@RequestParam("soluong") int soluong) {
-		List<Giohang> listGH = repo.findAll();
+		List<Giohang> listGH = repo.getGiohangByMakh(makh);
 		for(Giohang gh:listGH) {
 			if(gh.getSanpham().getMasp().equalsIgnoreCase(masp)) {
 				Giohang giohang = gh;
 				giohang.setSoluong(soluong);
+				//System.out.println(gh.getKhachhang().getTen());
 				try {
 					repo.save(giohang);
 					return new ResponseEntity<Boolean>(true,HttpStatus.OK);
@@ -106,6 +107,15 @@ public class GiohangController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<String>("Failed !!!",HttpStatus.BAD_REQUEST);
+	}
+	@GetMapping("/numcart/{makh}")
+	public int getSLC(@PathVariable("makh") String makh) {
+		List<Giohang> list = repo.getGiohangByMakh(makh);
+		int soluong = 0 ;
+		for(Giohang gh:list) {
+			soluong +=gh.getSoluong();
+		}
+		return soluong;
 	}
 	
 }
